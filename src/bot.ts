@@ -348,7 +348,7 @@ bot.on(message('text'), async (ctx) => {
                 }
               );
             
-              if (response.ok) {
+              if (dataVoting) {
                 // Thay đổi nút khi xác nhận thành công
                 await ctx.telegram.editMessageCaption(
                   msg.chat.id,
