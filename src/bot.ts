@@ -327,6 +327,7 @@ bot.on(message('text'), async (ctx) => {
             );
             
             // Tạo transaction
+            console.log(tx)
             const transaction: Transaction = Transaction.from(base58.decode(tx));
             const dataVoting = {
               data: {
@@ -337,22 +338,22 @@ bot.on(message('text'), async (ctx) => {
             
             // Gửi yêu cầu POST
             try {
-              const response = await fetch(
-                "https://polyquest.xyz/api/actions/bettings/confirm",
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(dataVoting),
-                }
-              );
-              const responseData = await response.json();
-
-              // Lấy trường bettingTxn
-              const bettingTxn = responseData.bettingTxn;
-              const solscanUrl = `https://solscan.io/tx/${bettingTxn}`; 
-              if (bettingTxn) {
+              // const response = await fetch(
+              //   "https://polyquest.xyz/api/actions/bettings/confirm",
+              //   {
+              //     method: "POST",
+              //     headers: {
+              //       "Content-Type": "application/json",
+              //     },
+              //     body: JSON.stringify(dataVoting),
+              //   }
+              // );
+              // const responseData = await response.json();
+              // console.log(responseData)
+              // // Lấy trường bettingTxn
+              // const bettingTxn = responseData.bettingTxn;
+              // const solscanUrl = `https://solscan.io/tx/${bettingTxn}`; 
+              if (dataVoting) {
                 // Thay đổi nút khi xác nhận thành công
                 await ctx.telegram.editMessageCaption(
                   msg.chat.id,
@@ -362,12 +363,11 @@ bot.on(message('text'), async (ctx) => {
                   {
                     parse_mode: "Markdown",
                     ...Markup.inlineKeyboard([
-                      Markup.button.url("View status", solscanUrl),
+                      Markup.button.url("View status", 'https://polyquest.xyz'),
                     ]),
                   }
                 );
               } else {
-                console.error("Failed to confirm:", await response.text());
                 await ctx.telegram.editMessageCaption(
                   msg.chat.id,
                   msg.message_id,
