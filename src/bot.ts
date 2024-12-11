@@ -329,6 +329,7 @@ bot.on(message('text'), async (ctx) => {
             // Tạo transaction
             console.log(tx)
             const transaction: Transaction = Transaction.from(base58.decode(tx));
+            console.log(transaction.serialize().toString("base64"))
             const dataVoting = {
               data: {
                 bettingId: bettingID,
