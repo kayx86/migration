@@ -347,7 +347,7 @@ bot.on(message('text'), async (ctx) => {
                   body: JSON.stringify(dataVoting),
                 }
               );
-              console.log(response.body)
+              console.log(response.json())
               if (dataVoting) {
                 // Thay đổi nút khi xác nhận thành công
                 await ctx.telegram.editMessageCaption(
