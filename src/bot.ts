@@ -205,7 +205,6 @@ const signTransaction = async (amount: number) => {
       const transactionBuffer = Buffer.from(data.encodedTx, "base64");
       const serializedTransaction = bs58.encode(transactionBuffer);
       if (session === undefined) throw new Error("missing or invalid session");
-      console.log(session)
       const payloadReturn = {
         session,
         transaction: serializedTransaction,
