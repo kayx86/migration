@@ -313,18 +313,18 @@ bot.on(message('text'), async (ctx) => {
         };
         const checkSign = async () => {
           if(successTransaction) {
-            await ctx.telegram.editMessageCaption(
-              msg.chat.id,
-              msg.message_id,
-              undefined,
-              `Wait for confirm`,
-              {
-                parse_mode: "Markdown",
-                ...Markup.inlineKeyboard([
-                  Markup.button.url("View status", "https://polyquest.xyz"),
-                ]),
-              }
-            );
+            // await ctx.telegram.editMessageCaption(
+            //   msg.chat.id,
+            //   msg.message_id,
+            //   undefined,
+            //   `Confirm successful`,
+            //   {
+            //     parse_mode: "Markdown",
+            //     ...Markup.inlineKeyboard([
+            //       Markup.button.url("View status", "https://polyquest.xyz"),
+            //     ]),
+            //   }
+            // );
             
             // Tạo transaction
             console.log(tx)
@@ -351,9 +351,6 @@ bot.on(message('text'), async (ctx) => {
               );
               const responseData = await response.json();
               console.log(responseData)
-              // Lấy trường bettingTxn
-              const bettingTxn = responseData.bettingTxn;
-              const solscanUrl = ``; 
               if (dataVoting) {
                 // Thay đổi nút khi xác nhận thành công
                 await ctx.telegram.editMessageCaption(
@@ -494,18 +491,18 @@ bot.on(message('text'), async (ctx) => {
         };
         const checkSign = async () => {
           if(successTransaction) {
-            await ctx.telegram.editMessageCaption(
-              msg.chat.id,
-              msg.message_id,
-              undefined,
-              `Wait for confirm`,
-              {
-                parse_mode: "Markdown",
-                ...Markup.inlineKeyboard([
-                  Markup.button.url("View status", "https://polyquest.xyz"),
-                ]),
-              }
-            );
+            // await ctx.telegram.editMessageCaption(
+            //   msg.chat.id,
+            //   msg.message_id,
+            //   undefined,
+            //   `Wait for confirm`,
+            //   {
+            //     parse_mode: "Markdown",
+            //     ...Markup.inlineKeyboard([
+            //       Markup.button.url("View status", "https://polyquest.xyz"),
+            //     ]),
+            //   }
+            // );
             
             // Tạo transaction
             const transaction: Transaction = Transaction.from(base58.decode(tx));
