@@ -16,7 +16,7 @@ import base58 from 'bs58';
 
 dotenv.config();
 const app = express();
-const PORT: number = 80;
+const PORT: number = 3000;
 app.use(bodyParser.json());
 const dappKeyPair = nacl.box.keyPair();
 let sharedSecret: Uint8Array | undefined;
@@ -66,7 +66,7 @@ app.get("/callback", async (req, res) => {
     );
     }
   }
-  res.redirect("tg://resolve?domain=testing_polyquest_bot");
+  res.redirect("https://t.me/testing_polyquest_bot");
 });
 app.get("/success",  async (req, res) => {
   successTransaction = "True";
@@ -97,7 +97,7 @@ app.get("/success",  async (req, res) => {
       console.log(endpontConfirm)
     }  
   }
-  res.redirect("tg://resolve?domain=testing_polyquest_bot");
+  res.redirect("https://t.me/testing_polyquest_bot");
 })
 
 const decryptPayload = (data: string, nonce: string, sharedSecret: Uint8Array) => {
