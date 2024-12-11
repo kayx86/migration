@@ -380,19 +380,19 @@ bot.on(message('text'), async (ctx) => {
                 );
               }
             } catch (error) {
-              console.error("Error during confirmation:", error);
-              await ctx.telegram.editMessageCaption(
-                msg.chat.id,
-                msg.message_id,
-                undefined,
-                `An error occurred. Please try again later.`,
-                {
-                  parse_mode: "Markdown",
-                  ...Markup.inlineKeyboard([
-                    Markup.button.url("View status", "https://polyquest.xyz"),
-                  ]),
-                }
-              );
+              // console.error("Error during confirmation:", error);
+              // await ctx.telegram.editMessageCaption(
+              //   msg.chat.id,
+              //   msg.message_id,
+              //   undefined,
+              //   `An error occurred. Please try again later.`,
+              //   {
+              //     parse_mode: "Markdown",
+              //     ...Markup.inlineKeyboard([
+              //       Markup.button.url("View status", "https://polyquest.xyz"),
+              //     ]),
+              //   }
+              // );
             }            
           }
           else {
@@ -556,19 +556,20 @@ bot.on(message('text'), async (ctx) => {
                 );
               }
             } catch (error) {
-              console.error("Error during confirmation:", error);
-              await ctx.telegram.editMessageCaption(
-                msg.chat.id,
-                msg.message_id,
-                undefined,
-                `An error occurred. Please try again later.`,
-                {
-                  parse_mode: "Markdown",
-                  ...Markup.inlineKeyboard([
-                    Markup.button.url("View status", "https://polyquest.xyz"),
-                  ]),
-                }
-              );
+              // console.error("Error during confirmation:", error);
+              // await ctx.telegram.editMessageCaption(
+              //   msg.chat.id,
+              //   msg.message_id,
+              //   undefined,
+              //   `An error occurred. Please try again later.`,
+              //   {
+              //     parse_mode: "Markdown",
+              //     ...Markup.inlineKeyboard([
+              //       Markup.button.url("View status", "https://polyquest.xyz"),
+              //     ]),
+              //   }
+              // );
+
             }            
           }
           else {
