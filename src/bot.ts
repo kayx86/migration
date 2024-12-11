@@ -541,7 +541,7 @@ bot.on(message('text'), async (ctx) => {
                   }
                 );
               } else {
-                console.error("Failed to confirm:", await response.text());
+                
                 await ctx.telegram.editMessageCaption(
                   msg.chat.id,
                   msg.message_id,
