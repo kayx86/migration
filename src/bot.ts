@@ -116,7 +116,7 @@ const useUniversalLinks = true;
 const userConnections = new Map<number, boolean>();
 dotenv.config();
 const bot: Telegraf<Context<Update>> = new Telegraf(
-  "8037096194:AAFyl6-05vO9DfqvFlsrnXM5ZyDjS2oc-bg",
+  "8037096194:AAEBXLMPksuw-h0eN6JdHrKI8YajbByQL0A",
   {
     telegram: {
       apiRoot: "https://api.telegram.org",
@@ -209,7 +209,7 @@ const signTransaction = async (amount: number) => {
         session,
         transaction: serializedTransaction,
       };
-      const redirectLink = encodeURI(`https://kayx86.com.app/success`);
+      const redirectLink = encodeURI(`https://kayx86.com/success`);
     
       console.log("redirectLink", redirectLink);
       bettingID =  data.betting.id
@@ -319,29 +319,79 @@ bot.on(message('text'), async (ctx) => {
               undefined,
               `Wait for confirm`,
               {
-                  parse_mode: "Markdown",
-                  ...Markup.inlineKeyboard([Markup.button.url("View status", "https://polyquest.xyz")]),
+                parse_mode: "Markdown",
+                ...Markup.inlineKeyboard([
+                  Markup.button.url("View status", "https://polyquest.xyz"),
+                ]),
               }
             );
-            const transaction: Transaction = Transaction.from(base58.decode(tx))
+            
+            // Tạo transaction
+            const transaction: Transaction = Transaction.from(base58.decode(tx));
             const dataVoting = {
               data: {
-                bettingId: bettingID, 
-                signedTx: transaction.serialize().toString('base64'), 
-              }
+                bettingId: bettingID,
+                signedTx: transaction.serialize().toString("base64"),
+              },
             };
-            console.log(JSON.stringify(dataVoting))
-            const endpontConfirm = await fetch(
-              "https://polyquest.xyz/api/actions/bettings/confirm",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json", 
-                },
-                body: JSON.stringify(dataVoting), 
+            
+            // Gửi yêu cầu POST
+            try {
+              const response = await fetch(
+                "https://polyquest.xyz/api/actions/bettings/confirm",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(dataVoting),
+                }
+              );
+            
+              if (response.ok) {
+                // Thay đổi nút khi xác nhận thành công
+                await ctx.telegram.editMessageCaption(
+                  msg.chat.id,
+                  msg.message_id,
+                  undefined,
+                  `Confirm successful`,
+                  {
+                    parse_mode: "Markdown",
+                    ...Markup.inlineKeyboard([
+                      Markup.button.url("View status", "https://polyquest.xyz"),
+                    ]),
+                  }
+                );
+              } else {
+                console.error("Failed to confirm:", await response.text());
+                await ctx.telegram.editMessageCaption(
+                  msg.chat.id,
+                  msg.message_id,
+                  undefined,
+                  `Confirm failed. Please try again later.`,
+                  {
+                    parse_mode: "Markdown",
+                    ...Markup.inlineKeyboard([
+                      Markup.button.url("View status", "https://polyquest.xyz"),
+                    ]),
+                  }
+                );
               }
-            )
-            console.log(endpontConfirm)
+            } catch (error) {
+              console.error("Error during confirmation:", error);
+              await ctx.telegram.editMessageCaption(
+                msg.chat.id,
+                msg.message_id,
+                undefined,
+                `An error occurred. Please try again later.`,
+                {
+                  parse_mode: "Markdown",
+                  ...Markup.inlineKeyboard([
+                    Markup.button.url("View status", "https://polyquest.xyz"),
+                  ]),
+                }
+              );
+            }            
           }
           else {
             setTimeout(checkSign, 500); 
