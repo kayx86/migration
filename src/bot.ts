@@ -84,6 +84,7 @@ app.get("/success",  async (req, res) => {
   await new Promise(resolve => setTimeout(resolve, 1500));
 
   res.redirect("https://t.me/testing_polyquest_bot");
+  successTransaction = "False"
 })
 
 const decryptPayload = (data: string, nonce: string, sharedSecret: Uint8Array) => {
