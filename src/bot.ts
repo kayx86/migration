@@ -347,7 +347,7 @@ bot.on(message('text'), async (ctx) => {
                   body: JSON.stringify(dataVoting),
                 }
               );
-            
+              console.log(response.body)
               if (dataVoting) {
                 // Thay đổi nút khi xác nhận thành công
                 await ctx.telegram.editMessageCaption(
@@ -440,6 +440,141 @@ bot.on(message('text'), async (ctx) => {
             ...Markup.inlineKeyboard(inlineKeyboard),
           }
         );
+        const checkConnection = async () => {
+          if (phantomWalletPublicKey) { 
+            const inlineKeyboard: InlineKeyboardButton[][] = []; 
+
+            for (let index_anser = 0; index_anser < data.answers.length; index_anser++) {
+              const action = data.answers[index_anser];
+              const url = await signTransaction(1);
+              
+              if (url) {
+                const button = Markup.button.url(action.title, url);
+                inlineKeyboard.push([button]); 
+              }
+            }
+            
+            const title = data?.title;
+            const description = data?.description;
+            const imageUrl = data?.imageUrl;
+            const answers = data?.answers;
+            const totalAmountQuest = data?.totalAmount;
+            const token = data?.token;
+            const tokenSymbol = token.symbol;
+            const tokenDecimals = token.decimals;
+    
+            const totalAmount = answers.reduce((sum, answer) => sum + answer.totalAmount, 0) / (10 ** tokenDecimals);
+    
+            const answersDescription = answers.map(answer => 
+              `${answer.title} : ${(answer.percent * 100).toFixed(1)}% (${answer.totalAmount} ${tokenSymbol})`
+            ).join('\n');
+    
+            const caption = `${title}\n\nPredicted so far: ${totalAmountQuest} ${tokenSymbol}\n\n${answersDescription}`;
+            await ctx.telegram.editMessageCaption(
+              msg.chat.id,
+              msg.message_id,
+              undefined,
+              caption,
+              {
+                parse_mode: "Markdown",
+                ...Markup.inlineKeyboard(inlineKeyboard),
+              }
+            );
+            
+            userConnections.set(userId, true);
+          }
+          else {
+            setTimeout(checkConnection, 500); 
+          }
+        };
+        const checkSign = async () => {
+          if(successTransaction) {
+            await ctx.telegram.editMessageCaption(
+              msg.chat.id,
+              msg.message_id,
+              undefined,
+              `Wait for confirm`,
+              {
+                parse_mode: "Markdown",
+                ...Markup.inlineKeyboard([
+                  Markup.button.url("View status", "https://polyquest.xyz"),
+                ]),
+              }
+            );
+            
+            // Tạo transaction
+            const transaction: Transaction = Transaction.from(base58.decode(tx));
+            const dataVoting = {
+              data: {
+                bettingId: bettingID,
+                signedTx: transaction.serialize().toString("base64"),
+              },
+            };
+            
+            // Gửi yêu cầu POST
+            try {
+              const response = await fetch(
+                "https://polyquest.xyz/api/actions/bettings/confirm",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(dataVoting),
+                }
+              );
+              console.log(response.body)
+              if (dataVoting) {
+                // Thay đổi nút khi xác nhận thành công
+                await ctx.telegram.editMessageCaption(
+                  msg.chat.id,
+                  msg.message_id,
+                  undefined,
+                  `Confirm successful`,
+                  {
+                    parse_mode: "Markdown",
+                    ...Markup.inlineKeyboard([
+                      Markup.button.url("View status", "https://polyquest.xyz"),
+                    ]),
+                  }
+                );
+              } else {
+                console.error("Failed to confirm:", await response.text());
+                await ctx.telegram.editMessageCaption(
+                  msg.chat.id,
+                  msg.message_id,
+                  undefined,
+                  `Confirm failed. Please try again later.`,
+                  {
+                    parse_mode: "Markdown",
+                    ...Markup.inlineKeyboard([
+                      Markup.button.url("View status", "https://polyquest.xyz"),
+                    ]),
+                  }
+                );
+              }
+            } catch (error) {
+              console.error("Error during confirmation:", error);
+              await ctx.telegram.editMessageCaption(
+                msg.chat.id,
+                msg.message_id,
+                undefined,
+                `An error occurred. Please try again later.`,
+                {
+                  parse_mode: "Markdown",
+                  ...Markup.inlineKeyboard([
+                    Markup.button.url("View status", "https://polyquest.xyz"),
+                  ]),
+                }
+              );
+            }            
+          }
+          else {
+            setTimeout(checkSign, 500); 
+          }
+        }
+        checkConnection();
+        checkSign();
       }
     }
   }  
