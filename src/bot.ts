@@ -26,6 +26,8 @@ let successTransaction: string | undefined;
 let dapp_serecet: string | undefined
 let phantomPubicKeyEncryp: string | undefined
 let bettingID: number | undefined
+let tx: string;
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
@@ -76,27 +78,11 @@ app.get("/success",  async (req, res) => {
   if (typeof nonce === 'string' && typeof data === 'string' ) { 
     if(sharedSecret) {
       const connectData = await decryptPayload(data, nonce, sharedSecret);
-      const transaction: Transaction = Transaction.from(base58.decode(connectData.transaction))
-      const dataVoting = {
-        data: {
-          bettingId: bettingID, 
-          signedTx: transaction.serialize().toString('base64'), 
-        }
-      };
-      console.log(JSON.stringify(dataVoting))
-      const endpontConfirm = await fetch(
-        "https://polyquest.xyz/api/actions/bettings/confirm",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json", 
-          },
-          body: JSON.stringify(dataVoting), 
-        }
-      )
-      console.log(endpontConfirm)
+      tx = connectData.transaction
     }  
   }
+  await new Promise(resolve => setTimeout(resolve, 1500));
+
   res.redirect("https://t.me/testing_polyquest_bot");
 })
 
@@ -331,12 +317,31 @@ bot.on(message('text'), async (ctx) => {
               msg.chat.id,
               msg.message_id,
               undefined,
-              `${ctx.from.first_name || ctx.from.first_name} has placed a bet successfully`,
+              `Wait for confirm`,
               {
                   parse_mode: "Markdown",
-                  ...Markup.inlineKeyboard([Markup.button.url("View Result", "https://polyquest.xyz")]),
+                  ...Markup.inlineKeyboard([Markup.button.url("View status", "https://polyquest.xyz")]),
               }
             );
+            const transaction: Transaction = Transaction.from(base58.decode(tx))
+            const dataVoting = {
+              data: {
+                bettingId: bettingID, 
+                signedTx: transaction.serialize().toString('base64'), 
+              }
+            };
+            console.log(JSON.stringify(dataVoting))
+            const endpontConfirm = await fetch(
+              "https://polyquest.xyz/api/actions/bettings/confirm",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json", 
+                },
+                body: JSON.stringify(dataVoting), 
+              }
+            )
+            console.log(endpontConfirm)
           }
           else {
             setTimeout(checkSign, 500); 
