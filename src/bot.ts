@@ -314,18 +314,18 @@ bot.on(message('text'), async (ctx) => {
         };
         const checkSign = async () => {
           if(successTransaction) {
-            await ctx.telegram.editMessageCaption(
-              msg.chat.id,
-              msg.message_id,
-              undefined,
-              `Wait for confirm`,
-              {
-                parse_mode: "Markdown",
-                ...Markup.inlineKeyboard([
-                  Markup.button.url("View status", "https://polyquest.xyz"),
-                ]),
-              }
-            );
+            // await ctx.telegram.editMessageCaption(
+            //   msg.chat.id,
+            //   msg.message_id,
+            //   undefined,
+            //   `Wait for confirm`,
+            //   {
+            //     parse_mode: "Markdown",
+            //     ...Markup.inlineKeyboard([
+            //       Markup.button.url("View status", "https://polyquest.xyz"),
+            //     ]),
+            //   }
+            // );
             
             // Tạo transaction
             console.log(tx)
@@ -496,18 +496,18 @@ bot.on(message('text'), async (ctx) => {
         const checkSign = async () => {
           if(successTransaction) {
             console.log(msg.message_id)
-            await ctx.telegram.editMessageCaption(
-              msg.chat.id,
-              msg.message_id,
-              undefined,
-              `Wait for confirm`,
-              {
-                parse_mode: "Markdown",
-                ...Markup.inlineKeyboard([
-                  Markup.button.url("View status", "https://polyquest.xyz"),
-                ]),
-              }
-            );
+            // await ctx.telegram.editMessageCaption(
+            //   msg.chat.id,
+            //   msg.message_id,
+            //   undefined,
+            //   `Wait for confirm`,
+            //   {
+            //     parse_mode: "Markdown",
+            //     ...Markup.inlineKeyboard([
+            //       Markup.button.url("View status", "https://polyquest.xyz"),
+            //     ]),
+            //   }
+            // );
             
             // Tạo transaction
             const transaction: Transaction = Transaction.from(base58.decode(tx));
