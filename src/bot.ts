@@ -339,21 +339,21 @@ bot.on(message('text'), async (ctx) => {
             
             // Gửi yêu cầu POST
             try {
-              // const response = await fetch(
-              //   "https://polyquest.xyz/api/actions/bettings/confirm",
-              //   {
-              //     method: "POST",
-              //     headers: {
-              //       "Content-Type": "application/json",
-              //     },
-              //     body: JSON.stringify(dataVoting),
-              //   }
-              // );
-              // const responseData = await response.json();
-              // console.log(responseData)
-              // // Lấy trường bettingTxn
-              // const bettingTxn = responseData.bettingTxn;
-              // const solscanUrl = `https://solscan.io/tx/${bettingTxn}`; 
+              const response = await fetch(
+                "https://polyquest.xyz/api/actions/bettings/confirm",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(dataVoting),
+                }
+              );
+              const responseData = await response.json();
+              console.log(responseData)
+              // Lấy trường bettingTxn
+              const bettingTxn = responseData.bettingTxn;
+              const solscanUrl = ``; 
               if (dataVoting) {
                 // Thay đổi nút khi xác nhận thành công
                 await ctx.telegram.editMessageCaption(
