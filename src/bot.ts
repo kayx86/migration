@@ -347,8 +347,12 @@ bot.on(message('text'), async (ctx) => {
                   body: JSON.stringify(dataVoting),
                 }
               );
-              console.log(response.json())
-              if (dataVoting) {
+              const responseData = await response.json();
+
+              // Lấy trường bettingTxn
+              const bettingTxn = responseData.bettingTxn;
+              const solscanUrl = `https://solscan.io/tx/${bettingTxn}`; 
+              if (bettingTxn) {
                 // Thay đổi nút khi xác nhận thành công
                 await ctx.telegram.editMessageCaption(
                   msg.chat.id,
@@ -358,7 +362,7 @@ bot.on(message('text'), async (ctx) => {
                   {
                     parse_mode: "Markdown",
                     ...Markup.inlineKeyboard([
-                      Markup.button.url("View status", "https://polyquest.xyz"),
+                      Markup.button.url("View status", solscanUrl),
                     ]),
                   }
                 );
