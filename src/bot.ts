@@ -183,8 +183,8 @@ const signTransaction = async (amount: number) => {
   const payload = {
       account: phantomWalletPublicKey,
       data: {
-          questId: 158,
-          answerId: 344,
+          questId: 275,
+          answerId: 574,
           amount: 0.009
       }
   };
