@@ -495,6 +495,7 @@ bot.on(message('text'), async (ctx) => {
         };
         const checkSign = async () => {
           if(successTransaction) {
+            console.log(msg.message_id)
             await ctx.telegram.editMessageCaption(
               msg.chat.id,
               msg.message_id,
