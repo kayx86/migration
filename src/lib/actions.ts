@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 
 export async function Handler() {
     try {
-        const url: string = "https://polyquest.xyz/api/actions/quests/158"
+        const url: string = "https://polyquest.xyz/api/actions/quests/275"
         const response = await axios.get(url);
         const data : Quest = response.data.quest
 

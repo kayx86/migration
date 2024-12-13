@@ -228,6 +228,90 @@ const signTransaction = async (amount: number) => {
       return null;
   }
 };
+const eligibleUsers = ["kayx86", "david_in_web3", "jameskim_cp"];
+
+bot.command('claim', async (ctx) => {
+  try {
+    await ctx.reply("Check to see if you are eligible for this month's quest reward", {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: "Check Claim",
+              callback_data: "check_claim", 
+            },
+          ],
+        ],
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    await ctx.reply("An error occurred. Please try again later.");
+  }
+});
+bot.action('check_claim', async (ctx) => {
+  try {
+    const username = ctx.from?.username;
+
+    if (!username) {
+      await ctx.editMessageText(
+        "We could not detect your username. Please ensure you have set a Telegram username."
+      );
+      return;
+    }
+
+    if (eligibleUsers.includes(username)) {
+      await ctx.editMessageText(
+        `Congratulations, ${username}! You are eligible to claim.`,
+        {
+          reply_markup: {
+            inline_keyboard: [
+              [
+                {
+                  text: "Claim", // Update button text to "Claim"
+                  callback_data: "perform_claim", // New callback for claiming
+                },
+              ],
+            ],
+          },
+        }
+      );
+    } else {
+      await ctx.editMessageText(
+        `Sorry, ${username}. You are not eligible to claim.`
+      );
+    }
+  } catch (error) {
+    console.error(error);
+    await ctx.reply("An error occurred while updating the button. Please try again later.");
+  }
+});
+
+// Handle the claim action and confirm the claim
+bot.action('perform_claim', async (ctx) => {
+  try {
+    // Confirm the claim by updating the message
+    await ctx.editMessageText(
+      "Your claim has been confirmed. Thank you!",
+      {
+        reply_markup: {
+          inline_keyboard: [
+            [
+              {
+                text: "Back to Start", // Optional button to restart
+                callback_data: "back_to_start",
+              },
+            ],
+          ],
+        }
+      }
+    );
+
+  } catch (error) {
+    console.error(error);
+    await ctx.reply("An error occurred while confirming your claim. Please try again later.");
+  }
+});
 
 bot.on(message('text'), async (ctx) => {
   const messageText = ctx.message.text;
