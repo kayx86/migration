@@ -259,10 +259,10 @@ bot.action('check_claim', async (ctx) => {
       );
       return;
     }
-
+    const token = "$BONK"
     if (eligibleUsers.includes(username)) {
       await ctx.editMessageText(
-        `Congratulations, ${username}! You are eligible to claim.`,
+        `Congratulations, ${username}! You are eligible to claim 500 ${token}.`,
         {
           reply_markup: {
             inline_keyboard: [
@@ -290,25 +290,14 @@ bot.action('check_claim', async (ctx) => {
 // Handle the claim action and confirm the claim
 bot.action('perform_claim', async (ctx) => {
   try {
-    // Confirm the claim by updating the message
-    await ctx.editMessageText(
-      "Your claim has been confirmed. Thank you!",
-      {
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: "Back to Start", // Optional button to restart
-                callback_data: "back_to_start",
-              },
-            ],
-          ],
-        }
-      }
-    );
+    // Lấy username hoặc tên người dùng
+    const username = ctx.from?.username ? `@${ctx.from.username}` : ctx.from?.first_name || "user";
 
+    // Chỉnh sửa nội dung tin nhắn gốc
+    await ctx.editMessageText(`🎉 Congratulations, ${username}! Your claim has been confirmed. Thank you!`);
   } catch (error) {
     console.error(error);
+    // Gửi thông báo lỗi nếu có vấn đề
     await ctx.reply("An error occurred while confirming your claim. Please try again later.");
   }
 });
